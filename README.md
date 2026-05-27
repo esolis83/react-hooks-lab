@@ -6,7 +6,7 @@ Click a button in the live demo and watch the exact lines of code light up, step
 
 ## Live demo
 
-**https://enriquesolis.me/hooks-lab/**
+**https://hooks-lab.enriquesolis.me/**
 
 ## What's inside
 
