@@ -1,0 +1,80 @@
+.presence {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.unmountedState {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 20px;
+  border: 1px dashed var(--glass-border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  width: 100%;
+}
+
+.innerDemo {
+  width: 100%;
+}
+
+.userCard {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.spinner {
+  width: 28px; height: 28px;
+  border: 2px solid rgba(74,222,128,0.2);
+  border-top-color: #4ade80;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.userData {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userIcon {
+  font-size: 1.5rem;
+}
+
+.userName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.depsBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid var(--accent-border);
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+.depsVal {
+  font-family: var(--font-mono);
+  color: var(--accent-light);
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}

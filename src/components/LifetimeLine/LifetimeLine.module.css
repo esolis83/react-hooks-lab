@@ -1,0 +1,78 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.evtWrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.node {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.4);
+  border: 1.5px solid var(--evt-color, #475569);
+  cursor: default;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+
+.nodeActive {
+  background: color-mix(in srgb, var(--evt-color) 20%, transparent);
+}
+
+.icon {
+  font-size: 0.7rem;
+  color: var(--evt-color, #475569);
+}
+
+.evtLabel {
+  font-size: 0.63rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  margin: 0 6px;
+  text-align: center;
+  min-width: 50px;
+  transition: color 0.2s;
+}
+
+.evtLabelActive {
+  font-weight: 600;
+}
+
+.connector {
+  width: 28px;
+  height: 1.5px;
+  background: var(--glass-border);
+  flex-shrink: 0;
+}

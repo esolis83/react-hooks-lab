@@ -1,0 +1,42 @@
+.sortedBox {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(244, 114, 182, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sortedLabel {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.sortedItems {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sortedItem {
+  width: 34px; height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(244, 114, 182, 0.1);
+  border: 1px solid rgba(244, 114, 182, 0.3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f472b6;
+}
+
+.cacheTag {
+  font-size: 0.72rem;
+  font-weight: 600;
+}

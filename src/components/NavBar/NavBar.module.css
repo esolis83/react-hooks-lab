@@ -1,0 +1,67 @@
+.nav {
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  background: rgba(7, 7, 26, 0.85);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  gap: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--accent-light);
+  white-space: nowrap;
+}
+
+.logoBrace {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.logoText {
+  color: var(--text-primary);
+  padding: 0 2px;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.link {
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.link:hover {
+  color: var(--text-primary);
+  background: var(--glass-bg);
+}
+
+.link code {
+  font-size: inherit;
+}
+
+.linkActive {
+  color: var(--accent-light) !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+}

@@ -1,0 +1,32 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid var(--accent-border);
+  border-radius: 99px;
+  padding: 4px 12px 4px 8px;
+  font-size: 0.75rem;
+  color: var(--accent-lighter);
+  transition: box-shadow 0.3s;
+}
+
+.pulse {
+  box-shadow: 0 0 14px var(--accent-glow);
+}
+
+.number {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--accent-light);
+  display: inline-block;
+  min-width: 1.4ch;
+  text-align: center;
+}
+
+.label {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}

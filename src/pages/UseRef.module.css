@@ -1,0 +1,24 @@
+.refSnapshot {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.snapRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.snapKey { color: #34d399; }
+
+.snapVal {
+  color: var(--text-primary);
+  font-size: 0.8rem;
+}
