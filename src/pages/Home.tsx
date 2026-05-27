@@ -40,23 +40,41 @@ const HOOKS = [
     when: 'When a computation is expensive or a function causes unnecessary child re-renders.',
   },
   {
+    to: '/use-context',
+    name: 'useContext',
+    tag: 'Context',
+    color: '#a78bfa',
+    desc: 'Read a value from a Context Provider anywhere in the tree — no prop drilling.',
+    example: 'const theme = useContext(ThemeContext)',
+    when: 'When many components at different depths need the same value.',
+  },
+  {
+    to: '/use-reducer',
+    name: 'useReducer',
+    tag: 'State Management',
+    color: '#fb923c',
+    desc: 'Manage complex state with a pure reducer — all updates flow through dispatch.',
+    example: 'const [state, dispatch] = useReducer(reducer, initialState)',
+    when: 'When state has multiple sub-values or many different update actions.',
+  },
+  {
     to: '/comparison',
     name: 'Hook Comparison',
     tag: 'Decision Guide',
-    color: '#a78bfa',
+    color: '#38bdf8',
     desc: 'Side-by-side breakdown of every hook — pick the right one every time.',
-    example: 'useState vs useEffect vs useRef vs useMemo',
+    example: 'useState vs useEffect vs useRef vs useMemo vs useContext vs useReducer',
     when: 'When you\'re not sure which hook to reach for.',
   },
 ];
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.07 } },
 };
 const item = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
 export default function Home() {
@@ -123,7 +141,7 @@ export default function Home() {
         className={styles.footer}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
+        transition={{ delay: 0.8 }}
       >
         Built with React 18 · TypeScript · Framer Motion · Vite
       </motion.p>

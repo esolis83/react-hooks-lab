@@ -122,9 +122,57 @@ const HOOKS = [
     ],
     mental: 'Like useMemo but for functions. Without it, every render creates a brand-new function object — even if the code is identical. useCallback returns the same object, preventing unnecessary child re-renders.',
   },
+  {
+    name: 'useContext',
+    to: '/use-context',
+    color: '#a78bfa',
+    icon: '🌐',
+    tagline: 'Read shared state anywhere in the tree — no prop drilling',
+    triggers: 'Re-render (when context value changes)',
+    dom: false,
+    async: false,
+    syntax: 'const value = useContext(MyContext)',
+    useCases: [
+      'Theme (dark / light mode)',
+      'Current authenticated user',
+      'Locale / language',
+      'Feature flags',
+      'Shared UI state (sidebar open, modal)',
+    ],
+    notFor: [
+      'High-frequency updates (every consumer re-renders!)',
+      'Local component state (just use useState)',
+      'Complex shared state (use useReducer + context)',
+    ],
+    mental: 'Think of it as a TV broadcast — the Provider is the transmitter, every useContext is a receiver. Change the broadcast and every TV updates, no cables between them needed.',
+  },
+  {
+    name: 'useReducer',
+    to: '/use-reducer',
+    color: '#fb923c',
+    icon: '⚙️',
+    tagline: 'Complex state with predictable, testable updates',
+    triggers: 'Re-render (when dispatch causes state change)',
+    dom: false,
+    async: false,
+    syntax: 'const [state, dispatch] = useReducer(reducer, init)',
+    useCases: [
+      'Multi-step forms',
+      'Shopping cart (add / remove / clear)',
+      'Task / todo list',
+      'State machine (idle → loading → success → error)',
+      'Shared state when paired with useContext',
+    ],
+    notFor: [
+      'Simple single values (use useState instead)',
+      'Side effects inside the reducer (it must be pure)',
+      'Async operations (dispatch after the await, not inside reducer)',
+    ],
+    mental: 'Like a bank account — you never change the balance directly. You submit a transaction (action), the bank (reducer) applies the rules, and returns the new balance (state). Auditable, predictable, testable.',
+  },
 ];
 
-// Precomputed lookup: hook name → color, used in the decision-tree answer view
+// Precomputed lookup: hook name → color
 const HOOK_COLOR: Record<string, string> = Object.fromEntries(
   HOOKS.map(h => [h.name, h.color]),
 );
@@ -133,26 +181,38 @@ const HOOK_COLOR: Record<string, string> = Object.fromEntries(
 const QUESTIONS = [
   {
     q: 'Does the UI need to change when the value changes?',
-    yes: { answer: 'useState', color: '#fbbf24' },
-    no: 'q2',
+    yes: 'q-shared',
+    no: 'q-effect',
   },
   {
-    id: 'q2',
+    id: 'q-shared',
+    q: 'Do many components at different depths need this value?',
+    yes: { answer: 'useContext', color: '#a78bfa' },
+    no: 'q-complex',
+  },
+  {
+    id: 'q-complex',
+    q: 'Does the state have many sub-values or complex update logic?',
+    yes: { answer: 'useReducer', color: '#fb923c' },
+    no: { answer: 'useState',   color: '#fbbf24' },
+  },
+  {
+    id: 'q-effect',
     q: 'Do you need to run code that has nothing to do with rendering?',
-    yes: { answer: 'useEffect', color: '#4ade80' },
-    no: 'q3',
+    yes: { answer: 'useEffect',  color: '#4ade80' },
+    no: 'q-memo',
   },
   {
-    id: 'q3',
+    id: 'q-memo',
     q: 'Is it an expensive calculation based on existing data?',
-    yes: { answer: 'useMemo', color: '#f472b6' },
-    no: 'q4',
+    yes: { answer: 'useMemo',    color: '#f472b6' },
+    no: 'q-callback',
   },
   {
-    id: 'q4',
+    id: 'q-callback',
     q: 'Is it a function you\'re passing as a prop to a child component?',
     yes: { answer: 'useCallback', color: '#a78bfa' },
-    no: { answer: 'useRef', color: '#34d399' },
+    no: { answer: 'useRef',       color: '#34d399' },
   },
 ];
 
@@ -162,21 +222,30 @@ const HOOK_ROUTES: Record<string, string> = {
   useMemo:     '/use-memo',
   useCallback: '/use-memo',
   useRef:      '/use-ref',
+  useContext:  '/use-context',
+  useReducer:  '/use-reducer',
 };
 
 /* ── Quick reference table ───────────────────────────────── */
-const TABLE_ROWS = [
-  { feature: 'Triggers re-render',     useState: '✓', useEffect: '—', useRef: '—', useMemo: '—', useCallback: '—' },
-  { feature: 'Runs after render',       useState: '—', useEffect: '✓', useRef: '—', useMemo: '—', useCallback: '—' },
-  { feature: 'Persists across renders', useState: '✓', useEffect: '—', useRef: '✓', useMemo: '✓', useCallback: '✓' },
-  { feature: 'DOM access',              useState: '—', useEffect: '✓', useRef: '✓', useMemo: '—', useCallback: '—' },
-  { feature: 'Dependency array',        useState: '—', useEffect: '✓', useRef: '—', useMemo: '✓', useCallback: '✓' },
-  { feature: 'Cleanup function',        useState: '—', useEffect: '✓', useRef: '—', useMemo: '—', useCallback: '—' },
-  { feature: 'For async/fetch',         useState: '—', useEffect: '✓', useRef: '—', useMemo: '—', useCallback: '—' },
-  { feature: 'For performance',         useState: '—', useEffect: '—', useRef: '—', useMemo: '✓', useCallback: '✓' },
-];
+const TABLE_HOOKS = [
+  'useState', 'useEffect', 'useRef',
+  'useMemo', 'useCallback', 'useContext', 'useReducer',
+] as const;
 
-const TABLE_HOOKS = ['useState', 'useEffect', 'useRef', 'useMemo', 'useCallback'] as const;
+type TableHook = typeof TABLE_HOOKS[number];
+
+const TABLE_ROWS: Array<{ feature: string } & Record<TableHook, string>> = [
+  { feature: 'Triggers re-render',     useState: '✓', useEffect: '—', useRef: '—', useMemo: '—', useCallback: '—', useContext: '✓', useReducer: '✓' },
+  { feature: 'Runs after render',       useState: '—', useEffect: '✓', useRef: '—', useMemo: '—', useCallback: '—', useContext: '—', useReducer: '—' },
+  { feature: 'Persists across renders', useState: '✓', useEffect: '—', useRef: '✓', useMemo: '✓', useCallback: '✓', useContext: '✓', useReducer: '✓' },
+  { feature: 'DOM access',              useState: '—', useEffect: '✓', useRef: '✓', useMemo: '—', useCallback: '—', useContext: '—', useReducer: '—' },
+  { feature: 'Dependency array',        useState: '—', useEffect: '✓', useRef: '—', useMemo: '✓', useCallback: '✓', useContext: '—', useReducer: '—' },
+  { feature: 'Cleanup function',        useState: '—', useEffect: '✓', useRef: '—', useMemo: '—', useCallback: '—', useContext: '—', useReducer: '—' },
+  { feature: 'For async/fetch',         useState: '—', useEffect: '✓', useRef: '—', useMemo: '—', useCallback: '—', useContext: '—', useReducer: '—' },
+  { feature: 'For performance',         useState: '—', useEffect: '—', useRef: '—', useMemo: '✓', useCallback: '✓', useContext: '—', useReducer: '—' },
+  { feature: 'Cross-tree sharing',      useState: '—', useEffect: '—', useRef: '—', useMemo: '—', useCallback: '—', useContext: '✓', useReducer: '—' },
+  { feature: 'Multi-action state',      useState: '—', useEffect: '—', useRef: '—', useMemo: '—', useCallback: '—', useContext: '—', useReducer: '✓' },
+];
 
 /* ── Component ───────────────────────────────────────────── */
 export default function ComparisonPage() {
@@ -201,7 +270,6 @@ export default function ComparisonPage() {
     setTreeAnswer(null);
   }
 
-  // Color for the currently resolved tree answer (looked up once, not inline)
   const answerColor = treeAnswer ? HOOK_COLOR[treeAnswer] : undefined;
 
   return (
@@ -287,7 +355,6 @@ export default function ComparisonPage() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>🔬 Hook deep-dive</h2>
 
-        {/* Tab selector */}
         <div className={styles.tabs}>
           {HOOKS.map((h, i) => (
             <button
@@ -313,7 +380,6 @@ export default function ComparisonPage() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22 }}
           >
-            {/* Header */}
             <div className={styles.hookHeader}>
               <span className={styles.hookIcon}>{hook.icon}</span>
               <div>
@@ -331,7 +397,6 @@ export default function ComparisonPage() {
               </Link>
             </div>
 
-            {/* Syntax */}
             <pre
               className={styles.hookSyntax}
               style={{ borderColor: `${hook.color}40` }}
@@ -339,17 +404,14 @@ export default function ComparisonPage() {
               <code>{hook.syntax}</code>
             </pre>
 
-            {/* Chips */}
             <div className={styles.chipRow}>
               <span
                 className={styles.chip}
-                style={{
-                  background:   `${hook.color}15`,
-                  color:         hook.color,
-                  borderColor:  `${hook.color}40`,
-                }}
+                style={{ background: `${hook.color}15`, color: hook.color, borderColor: `${hook.color}40` }}
               >
-                {hook.triggers === 'Re-render' ? '🔄 Triggers re-render' : hook.triggers}
+                {hook.triggers === 'Re-render' || hook.triggers.startsWith('Re-render')
+                  ? `🔄 ${hook.triggers}`
+                  : hook.triggers}
               </span>
               {hook.dom && (
                 <span className={styles.chip} style={{ background: 'rgba(56,189,248,0.1)', color: '#38bdf8', borderColor: 'rgba(56,189,248,0.3)' }}>
@@ -363,7 +425,6 @@ export default function ComparisonPage() {
               )}
             </div>
 
-            {/* Use cases + Not for */}
             <div className={styles.caseGrid}>
               <div className={styles.caseBox}>
                 <span className={styles.caseTitle} style={{ color: hook.color }}>✓ Use for</span>
@@ -379,7 +440,6 @@ export default function ComparisonPage() {
               </div>
             </div>
 
-            {/* Mental model */}
             <div className={styles.mental}>
               <span className={styles.mentalLabel}>💡 Mental model</span>
               <p className={styles.mentalText}>{hook.mental}</p>
