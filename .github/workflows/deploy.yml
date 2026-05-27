@@ -2,22 +2,31 @@ name: Build & Deploy to Hostinger
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Node 20
+      - name: Install lftp
+        run: sudo apt-get install -y --no-install-recommends lftp
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -25,22 +34,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Install lftp
-        run: sudo apt-get install -y lftp
-
-      - name: Deploy via FTP
+      - name: Deploy to Hostinger via FTP
         env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USER:   ${{ secrets.FTP_USERNAME }}
-          FTP_PASS:   ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER:      ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME:    ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD:    ${{ secrets.FTP_PASSWORD }}
+          FTP_REMOTE_PATH: ${{ secrets.FTP_REMOTE_PATH }}
         run: |
-          lftp -c "
-            set ftp:ssl-allow no;
-            set net:timeout 15;
-            set net:max-retries 3;
-            open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_SERVER\";
-            mkdir -p domains/enriquesolis.me/public_html/hooks-lab;
-            mirror --reverse --delete --verbose --no-perms --parallel=4 \
-              ./dist/ domains/enriquesolis.me/public_html/hooks-lab;
-            quit
-          "
+          lftp -c "set ssl:verify-certificate no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete --no-perms --parallel=5 ./dist/ $FTP_REMOTE_PATH"
