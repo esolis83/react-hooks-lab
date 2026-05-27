@@ -41,4 +41,4 @@ jobs:
           FTP_PASSWORD:    ${{ secrets.FTP_PASSWORD }}
           FTP_REMOTE_PATH: ${{ secrets.FTP_REMOTE_PATH }}
         run: |
-          lftp -c "set ssl:verify-certificate no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --delete --no-perms --parallel=5 ./dist/ $FTP_REMOTE_PATH"
+          lftp -c "set ssl:verify-certificate no; open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER; mirror -R --parallel=5 ./dist/ $FTP_REMOTE_PATH"
